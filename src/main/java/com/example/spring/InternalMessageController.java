@@ -10,12 +10,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.spring.beans.Message;
 
 @Controller
+@RequestMapping(value = "/internal")
 public class InternalMessageController {
 	private static final Logger logger = LoggerFactory.getLogger(InternalMessageController.class);
 
-	@RequestMapping(value = "/internal", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView message() {
 		logger.info("Welcome internal");
 		return new ModelAndView("basic", "message", new Message());
+	}
+	
+	@RequestMapping(value = "/include", method = RequestMethod.GET)
+	public ModelAndView include() {
+		return new ModelAndView("/include", "path", "/external/external-static.html");
+		
 	}
 }
