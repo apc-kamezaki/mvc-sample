@@ -2,15 +2,13 @@ package com.example.spring;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,11 +47,15 @@ public class InternalMessageController {
 		String path = apm.extractPathWithinPattern(bestMatchPattern, fullPath);
 		path = path.startsWith("/") ? path : "/" + path;
 		logger.info("Internal static html " + path);
-		return new ModelAndView("/include", "path", path);
+		if (folderHandler.isExists(path)) {
+			return new ModelAndView("/include", "path", path);
+		} else {
+			return new ModelAndView("/404", HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@RequestMapping(value = "/**/{file:(?!(?:.+\\.html?)$).+$}", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> staticFile(HttpServletRequest req) throws FileNotFoundException, IOException {
+	public void staticFile(HttpServletRequest req, HttpServletResponse res) throws FileNotFoundException, IOException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 		String path = apm.extractPathWithinPattern(bestMatchPattern, fullPath);
@@ -62,10 +64,18 @@ public class InternalMessageController {
 		String ext = (lastDot >= 0 && lastDot < fullPath.length() - 1) ? fullPath.substring(lastDot + 1) : "";
 		logger.info("Internal file from " + path + " ext : " + ext);
 		
-		// TODO handle exception
-		byte[] data = folderHandler.toByteArray(path);
-		HttpHeaders headers = new HttpHeaders();
-		headers.put("Content-type", Arrays.asList(folderHandler.getContentType(ext)));
-		return new ResponseEntity<>(data, headers, HttpStatus.OK);
+		try {
+			byte[] data = folderHandler.toByteArray(path);
+			
+			res.setContentType(folderHandler.getContentType(ext));
+			if (folderHandler.isBinary(ext)) {
+				res.setCharacterEncoding(null);
+			}
+			res.getOutputStream().write(data);
+			res.getOutputStream().flush();
+		} catch (FileNotFoundException fe) {
+			res.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+		// FIXME: Do not need to handle other exceptions?
 	}
 }

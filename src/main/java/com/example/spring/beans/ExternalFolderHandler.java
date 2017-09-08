@@ -14,6 +14,11 @@ public class ExternalFolderHandler {
 	
 	// TODO auto-wire by spring bean
 	private ExternalFolderProperty property = new ExternalFolderProperty();
+	
+	public boolean isExists(String filename) {
+		File file = new File(property.getExternalFolder(), filename);
+		return file.exists();
+	}
 
 	public byte[] toByteArray(String filename) throws FileNotFoundException, IOException {
 		File file = new File(property.getExternalFolder(), filename);
@@ -36,6 +41,18 @@ public class ExternalFolderHandler {
 	public String getContentType(String ext) {
 		String type = contentTypeMap.get(ext);
 		return type != null ? type : contentTypeMap.get("");
+	}
+	
+	public boolean isBinary(String ext) {
+		switch (ext) {
+		case "html":
+		case "htm":
+		case "css":
+		case "js":
+			return false;
+		default:
+			return true;
+		}
 	}
 
 	private static final Map<String, String> contentTypeMap;
