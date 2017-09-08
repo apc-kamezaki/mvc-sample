@@ -38,7 +38,7 @@ public class InternalMessageController {
 		String path = apm.extractPathWithinPattern(bestMatchPattern, fullPath);
 		path = path.startsWith("/") ? path : "/" + path;
 		logger.info("Internal static html " + path);
-		return new ModelAndView("/include", "path", "/external/external-static.html");
+		return new ModelAndView("/include", "path", path);
 	}
 
 	@RequestMapping(value = "/**/{file:(?!(?:.+\\.html?)$).+$}", method = RequestMethod.GET)
