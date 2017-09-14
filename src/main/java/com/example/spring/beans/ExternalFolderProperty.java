@@ -1,7 +1,7 @@
 package com.example.spring.beans;
 
 public class ExternalFolderProperty {
-	private String externalFolder = "c:/data/freemarker/";
+	private String externalFolder = "/Users/hitoshi/data/freemarker/";
 
 	public String getExternalFolder() {
 		return externalFolder;
