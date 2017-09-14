@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.beans.ExternalFolderHandler;
 import com.example.spring.beans.Message;
+import com.example.spring.exceptions.ExternalFileNotFoundException;
 
 @Controller
 @RequestMapping(value = "/internal")
@@ -41,22 +41,20 @@ public class InternalMessageController {
 	}
 	
 	@RequestMapping(value = "/**/{file:.+\\.html?}", method = RequestMethod.GET)
-	public ModelAndView staticHtml(HttpServletRequest req, HttpServletResponse res) {
+	public ModelAndView staticHtml(HttpServletRequest req, HttpServletResponse res) throws ExternalFileNotFoundException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 		String path = apm.extractPathWithinPattern(bestMatchPattern, fullPath);
 		path = path.startsWith("/") ? path : "/" + path;
 		logger.info("Internal static html " + path);
-		if (folderHandler.isExists(path)) {
-			return new ModelAndView("/include", "path", path);
-		} else {
-			res.setStatus(HttpStatus.NOT_FOUND.value());
-			return new ModelAndView("/404");
+		if (!folderHandler.isExists(path)) {
+			throw new ExternalFileNotFoundException(path);
 		}
+		return new ModelAndView("/include", "path", path);
 	}
 
 	@RequestMapping(value = "/**/{file:(?!(?:.+\\.html?)$).+$}", method = RequestMethod.GET)
-	public void staticFile(HttpServletRequest req, HttpServletResponse res) throws FileNotFoundException, IOException {
+	public void staticFile(HttpServletRequest req, HttpServletResponse res) throws ExternalFileNotFoundException, IOException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 		String path = apm.extractPathWithinPattern(bestMatchPattern, fullPath);
@@ -75,7 +73,7 @@ public class InternalMessageController {
 			res.getOutputStream().write(data);
 			res.getOutputStream().flush();
 		} catch (FileNotFoundException fe) {
-			res.setStatus(HttpStatus.NOT_FOUND.value());
+			throw new ExternalFileNotFoundException(path);
 		}
 		// FIXME: Do not need to handle other exceptions?
 	}
