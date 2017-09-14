@@ -41,7 +41,7 @@ public class InternalMessageController {
 	}
 	
 	@RequestMapping(value = "/**/{file:.+\\.html?}", method = RequestMethod.GET)
-	public ModelAndView staticHtml(HttpServletRequest req) {
+	public ModelAndView staticHtml(HttpServletRequest req, HttpServletResponse res) {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 		String path = apm.extractPathWithinPattern(bestMatchPattern, fullPath);
@@ -50,7 +50,8 @@ public class InternalMessageController {
 		if (folderHandler.isExists(path)) {
 			return new ModelAndView("/include", "path", path);
 		} else {
-			return new ModelAndView("/404", HttpStatus.NOT_FOUND);
+			res.setStatus(HttpStatus.NOT_FOUND.value());
+			return new ModelAndView("/404");
 		}
 	}
 
