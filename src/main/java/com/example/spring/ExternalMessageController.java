@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.beans.Message;
-import com.example.spring.beans.Path;
+import com.example.spring.beans.ExternalPath;
 
 @Controller
 @RequestMapping(value = "/external")
@@ -28,6 +28,6 @@ public class ExternalMessageController {
 
 	@RequestMapping(value = "/extra-static", method = RequestMethod.GET)
 	public ModelAndView extraStatic() {
-		return new ModelAndView("/external/include", "path", new Path("/external/external-static.html"));
+		return new ModelAndView("/external/include", "value", new ExternalPath("/external/external-static.html"));
 	}
 }

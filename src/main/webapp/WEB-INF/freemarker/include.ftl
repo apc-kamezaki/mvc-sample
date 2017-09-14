@@ -1,2 +1,2 @@
 <!-- include template in internal folder -->
-<#include path.path >
+<#include value.path >

@@ -44,6 +44,7 @@
 	    <beans:property name="cache" value="true"/>
 	    <beans:property name="prefix" value=""/>
 	    <beans:property name="suffix" value=".ftl"/>
+	    <beans:property name="contentType" value="text/html;charset=UTF-8" />
 	</beans:bean>	
 	<context:component-scan base-package="com.example.spring" />
 	

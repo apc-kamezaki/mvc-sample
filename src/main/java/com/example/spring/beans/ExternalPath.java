@@ -1,9 +1,9 @@
 package com.example.spring.beans;
 
-public class Path {
+public class ExternalPath {
 	private String path;
 	
-	public Path(String path) {
+	public ExternalPath(String path) {
 		this.path = path;
 	}
 	

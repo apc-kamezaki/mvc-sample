@@ -1,14 +1,30 @@
 package com.example.spring.beans;
 
-public class HtmlMessage extends Message {
-	private String path;
+public class HtmlMessage extends ExternalPath {
+	private String title = "TITLE";
+	private String description = "Description";
 	
 	public HtmlMessage(String path) {
-		this.path = path;
+		super(path);
 	}
 	
-	public String getPath() {
-		return path;
+	public HtmlMessage(String path, String title) {
+		super(path);
+		this.title = title != null ? title : "";
+	}
+	
+	public HtmlMessage(String path, String title, String description) {
+		super(path);
+		this.title = title != null ? title : "";
+		this.description = description != null ? description : "";
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 
 }
