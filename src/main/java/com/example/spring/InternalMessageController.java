@@ -16,7 +16,9 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.beans.ExternalFolderHandler;
+import com.example.spring.beans.HtmlMessage;
 import com.example.spring.beans.Message;
+import com.example.spring.beans.Path;
 import com.example.spring.exceptions.ExternalFileNotFoundException;
 
 @Controller
@@ -37,8 +39,16 @@ public class InternalMessageController {
 	@RequestMapping(value = "/include", method = RequestMethod.GET)
 	public ModelAndView include() {
 		logger.info("Internal include");
-		return new ModelAndView("/include", "path", "/external/external-static.html");
+		return new ModelAndView("/include", "path", new Path("/external/external-static.html"));
 	}
+
+	/*
+	@RequestMapping(value = "/message", method = RequestMethod.GET)
+	public ModelAndView replaceableMessage() {
+		logger.info("Internal include");
+		return new ModelAndView("/include", "path", new HtmlMessage("/external/info/message.html"));
+	}
+	*/
 	
 	@RequestMapping(value = "/**/{file:.+\\.html?}", method = RequestMethod.GET)
 	public ModelAndView staticHtml(HttpServletRequest req, HttpServletResponse res) throws ExternalFileNotFoundException {
@@ -50,7 +60,7 @@ public class InternalMessageController {
 		if (!folderHandler.isExists(path)) {
 			throw new ExternalFileNotFoundException(path);
 		}
-		return new ModelAndView("/include", "path", path);
+		return new ModelAndView("/include", "path", new HtmlMessage(path));
 	}
 
 	@RequestMapping(value = "/**/{file:(?!(?:.+\\.html?)$).+$}", method = RequestMethod.GET)
