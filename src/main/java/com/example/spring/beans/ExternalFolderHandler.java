@@ -49,6 +49,7 @@ public class ExternalFolderHandler {
 		case "htm":
 		case "css":
 		case "js":
+		case "xml":
 			return false;
 		default:
 			return true;
@@ -64,7 +65,9 @@ public class ExternalFolderHandler {
 		contentTypeMap.put("gif", "image/gif");
 		contentTypeMap.put("pdf", "application/pdf");
 		contentTypeMap.put("css", "text/css");
+		contentTypeMap.put("xml", "application/xml");
 		contentTypeMap.put("js", "text/javascript");
+		contentTypeMap.put("swf","application/x-shockwave-flash");
 		contentTypeMap.put("", "application/octet-stream");
 	}
 }
