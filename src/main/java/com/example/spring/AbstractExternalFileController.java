@@ -31,6 +31,14 @@ public abstract class AbstractExternalFileController<T extends ExternalPath> {
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
 	
+	protected Logger logger() {
+		return logger;
+	}
+	
+	protected ExternalFolderHandler getExternalFolderHandler() {
+		return folderHandler;
+	}
+	
 	public abstract T getModel(String path);
 	public abstract String getExternalPathPrefix();
 	
