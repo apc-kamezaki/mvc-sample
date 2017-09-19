@@ -2,24 +2,29 @@ package com.example.spring.beans;
 
 public class SessionValueObject extends ExternalPath {
 	
+	private int year;
+	private String site;
+	private int grade;
+	
 	public SessionValueObject(String path) {
 		super(path);
 	}
 
-	private int year;
-	private String site;
-	
 	public int getYear() {
 		return year;
 	}
 	public String getSite() {
 		return site;
 	}
+	public int getGrade() {
+		return grade;
+	}
 	
 	public static class SessionValueObjectBuilder {
 		private String path;
 		private int year;
 		private String site;
+		private int grade;
 
 		public SessionValueObjectBuilder setPath(String path) {
 			this.path = path;
@@ -34,11 +39,16 @@ public class SessionValueObject extends ExternalPath {
 			this.site = site;
 			return this;
 		}
+		public SessionValueObjectBuilder setGrade(int grade) {
+			this.grade = grade;
+			return this;
+		}
 		
 		public SessionValueObject build() {
 			SessionValueObject vo = new SessionValueObject(path);
 			vo.year = this.year;
 			vo.site = this.site;
+			vo.grade = this.grade;
 			return vo;
 		}		
 	}

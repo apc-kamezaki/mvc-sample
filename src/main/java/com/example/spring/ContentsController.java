@@ -28,6 +28,7 @@ public class ContentsController extends AbstractExternalFileController<SessionVa
 				.setPath(path)
 				.setYear(2017)
 				.setSite("1")
+				.setGrade(6)
 				.build();
 	}
 
