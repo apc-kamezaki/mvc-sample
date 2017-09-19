@@ -50,11 +50,14 @@ public class ContentsController extends AbstractExternalFileController<SessionVa
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 		String path = new File(getExternalPathPrefix(), apm.extractPathWithinPattern(bestMatchPattern, fullPath)).getPath() + "/"+ sub;
-		logger().info("sub index : " + path);
+		logger().info("sub index : " + path + " sub : " + sub);
 		ExternalFolderHandler handler = getExternalFolderHandler();
+		File template = new File(path, "index.ftl");
 		File html = new File(path, "index.html");
 		File htm = new File(path, "index.htm");
-		if (handler.isExists(html.getPath())) {
+		if (handler.isExists(template.getPath())) {
+			return new ModelAndView(String.format("%s/%s/index", getExternalPathPrefix(), sub), "value", getModel(html.getPath()));
+		} else if (handler.isExists(html.getPath())) {
 			return new ModelAndView("/include", "value", getModel(html.getPath()));
 		} else if (handler.isExists(htm.getPath())) {
 			return new ModelAndView("/include", "value", getModel(htm.getPath()));			
