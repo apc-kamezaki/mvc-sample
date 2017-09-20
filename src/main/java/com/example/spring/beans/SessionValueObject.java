@@ -5,6 +5,7 @@ public class SessionValueObject extends ExternalPath {
 	private int year;
 	private String site;
 	private int grade;
+	private boolean smartphone;
 	
 	public SessionValueObject(String path) {
 		super(path);
@@ -19,12 +20,16 @@ public class SessionValueObject extends ExternalPath {
 	public int getGrade() {
 		return grade;
 	}
+	public boolean isSmartphone() {
+		return smartphone;
+	}
 	
 	public static class SessionValueObjectBuilder {
 		private String path;
 		private int year;
 		private String site;
 		private int grade;
+		private boolean smartphone;
 
 		public SessionValueObjectBuilder setPath(String path) {
 			this.path = path;
@@ -43,12 +48,17 @@ public class SessionValueObject extends ExternalPath {
 			this.grade = grade;
 			return this;
 		}
+		public SessionValueObjectBuilder setSmartphone(boolean smartphone) {
+			this.smartphone = smartphone;
+			return this;
+		}
 		
 		public SessionValueObject build() {
 			SessionValueObject vo = new SessionValueObject(path);
 			vo.year = this.year;
 			vo.site = this.site;
 			vo.grade = this.grade;
+			vo.smartphone = this.smartphone;
 			return vo;
 		}		
 	}
