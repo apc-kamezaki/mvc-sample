@@ -1,6 +1,8 @@
 package com.example.spring;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +23,7 @@ import com.example.spring.exceptions.ExternalFileNotFoundException;
 @RequestMapping(value = "/contents")
 public class ContentsController extends AbstractExternalFileController<SessionValueObject> {
 	private static final AntPathMatcher apm = new AntPathMatcher();
+	Pattern subPathPattern = Pattern.compile("^(\\/contents\\/\\/?.+?)\\/.*$");
 
 	@Override
 	public SessionValueObject getModel(String path) {
@@ -29,6 +32,7 @@ public class ContentsController extends AbstractExternalFileController<SessionVa
 				.setYear(2017)
 				.setSite("1")
 				.setGrade(6)
+				.setMap(getExternalFolderHandler().getLocalVariables(getSubPath(path)))
 				.build();
 	}
 
@@ -64,6 +68,14 @@ public class ContentsController extends AbstractExternalFileController<SessionVa
 			return new ModelAndView("/include", "value", getModel(htm.getPath()));			
 		}
 		throw new ExternalFileNotFoundException(path);
+	}
+	
+	private String getSubPath(String path) {
+		Matcher m = subPathPattern.matcher(path);
+		if (m.find()) {
+			return m.group(1);
+		}
+		return null;
 	}
 
 }

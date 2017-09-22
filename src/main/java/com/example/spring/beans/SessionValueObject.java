@@ -1,11 +1,15 @@
 package com.example.spring.beans;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class SessionValueObject extends ExternalPath {
 	
 	private int year;
 	private String site;
 	private int grade;
 	private boolean smartphone;
+	private Map<String, Object> map;
 	
 	public SessionValueObject(String path) {
 		super(path);
@@ -24,12 +28,17 @@ public class SessionValueObject extends ExternalPath {
 		return smartphone;
 	}
 	
+	public Map<String, Object> getMap() {
+		return map;
+	}
+	
 	public static class SessionValueObjectBuilder {
 		private String path;
 		private int year;
 		private String site;
 		private int grade;
 		private boolean smartphone;
+		private Map<String, Object> map = Collections.emptyMap();
 
 		public SessionValueObjectBuilder setPath(String path) {
 			this.path = path;
@@ -52,6 +61,10 @@ public class SessionValueObject extends ExternalPath {
 			this.smartphone = smartphone;
 			return this;
 		}
+		public SessionValueObjectBuilder setMap(Map<String, Object> map) {
+			this.map = map;
+			return this;
+		}
 		
 		public SessionValueObject build() {
 			SessionValueObject vo = new SessionValueObject(path);
@@ -59,6 +72,7 @@ public class SessionValueObject extends ExternalPath {
 			vo.site = this.site;
 			vo.grade = this.grade;
 			vo.smartphone = this.smartphone;
+			vo.map = this.map;
 			return vo;
 		}		
 	}
