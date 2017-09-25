@@ -18,7 +18,7 @@
 	<resources mapping="/resources/**" location="/resources/" />
 
 	<!-- freemarker config -->
-	<beans:bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+	<beans:bean id="freemarkerConfig" class="com.example.spring.handlers.CustomFreeMarkerConfigurer">
 	    <beans:property name="templateLoaderPaths" value="/WEB-INF/freemarker/, file:/Users/hitoshi/data/freemarker/"/>
 	</beans:bean>
 	
