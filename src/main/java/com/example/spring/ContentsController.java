@@ -23,7 +23,7 @@ import com.example.spring.exceptions.ExternalFileNotFoundException;
 @RequestMapping(value = "/contents")
 public class ContentsController extends AbstractExternalFileController<SessionValueObject> {
 	private static final AntPathMatcher apm = new AntPathMatcher();
-	Pattern subPathPattern = Pattern.compile("^(\\/contents\\/\\/?.+?)\\/.*$");
+	private static final Pattern subPathPattern = Pattern.compile("^(\\/contents\\/\\/?.+?)\\/.*$");
 
 	@Override
 	public SessionValueObject getModel(String path) {
