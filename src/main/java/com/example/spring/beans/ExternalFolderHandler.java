@@ -1,13 +1,10 @@
 package com.example.spring.beans;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,24 +29,6 @@ public class ExternalFolderHandler {
 		return file.exists();
 	}
 
-	public byte[] toByteArray(String filename) throws FileNotFoundException, IOException {
-		File file = getFile(filename);
-		
-		try (
-				InputStream is = new BufferedInputStream(new FileInputStream(file));
-				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-			byte[] buffer= new byte[2048];
-			int length;
-			while ((length = is.read(buffer)) > 0) {
-				out.write(buffer, 0, length);
-			}
-			out.flush();
-			return out.toByteArray();
-		} finally {
-			
-		}
-	}
-	
 	public Map<String, Object> getLocalVariables(String localPath) {
 		Map<String, Object> localVariables = Collections.emptyMap();
 		if (localPath == null || localPath.length() < 1) {
@@ -70,6 +49,10 @@ public class ExternalFolderHandler {
 	public String getContentType(String ext) {
 		String type = contentTypeMap.get(ext);
 		return type != null ? type : contentTypeMap.get("");
+	}
+
+	public Path getPath(String filename) {
+		return FileSystems.getDefault().getPath(property.getExternalFolder(), filename);
 	}
 	
 	protected File getFile(String filename) {

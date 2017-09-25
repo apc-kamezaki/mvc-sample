@@ -1,8 +1,8 @@
 package com.example.spring;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,7 +55,7 @@ public abstract class AbstractExternalFileController<T extends ExternalPath> {
 	}
 
 	@RequestMapping(value = "/**/{file:(?!(?:.+\\.html?)$).+$}", method = RequestMethod.GET)
-	public void staticFile(HttpServletRequest req, HttpServletResponse res) throws ExternalFileNotFoundException, IOException {
+	public void staticFile(HttpServletRequest req, HttpServletResponse res) throws ExternalFileNotFoundException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 		String path = new File(getExternalPathPrefix(), apm.extractPathWithinPattern(bestMatchPattern, fullPath)).getPath();
@@ -64,18 +64,10 @@ public abstract class AbstractExternalFileController<T extends ExternalPath> {
 		logger.info("Internal file from " + path + " ext : " + ext);
 		
 		try {
-			byte[] data = folderHandler.toByteArray(path);
-			
-			res.setContentType(folderHandler.getContentType(ext));
-			if (folderHandler.isBinary(ext)) {
-				res.setCharacterEncoding(null);
-			}
-			res.getOutputStream().write(data);
-			res.getOutputStream().flush();
-		} catch (FileNotFoundException fe) {
-			logger.error("file not found", fe);
+			Files.copy(folderHandler.getPath(path), res.getOutputStream());
+		} catch (IOException ie) {
+			logger.error("copy file error", ie);
 			throw new ExternalFileNotFoundException(path);
 		}
-		// FIXME: Do not need to handle other exceptions?
 	}
 }
