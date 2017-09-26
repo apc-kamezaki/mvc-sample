@@ -2,7 +2,6 @@ package com.example.spring;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +63,7 @@ public abstract class AbstractExternalFileController<T extends ExternalPath> {
 		logger.info("Internal file from " + path + " ext : " + ext);
 		
 		try {
-			Files.copy(folderHandler.getPath(path), res.getOutputStream());
+			folderHandler.copyFile(path, res.getOutputStream());
 		} catch (IOException ie) {
 			logger.error("copy file error", ie);
 			throw new ExternalFileNotFoundException(path);

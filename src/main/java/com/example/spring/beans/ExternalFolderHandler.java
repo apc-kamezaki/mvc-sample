@@ -3,7 +3,9 @@ package com.example.spring.beans;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,14 +52,19 @@ public class ExternalFolderHandler {
 		String type = contentTypeMap.get(ext);
 		return type != null ? type : contentTypeMap.get("");
 	}
-
-	public Path getPath(String filename) {
-		return FileSystems.getDefault().getPath(property.getExternalFolder(), filename);
-	}
 	
+	public void copyFile(String filename, OutputStream os) throws IOException {
+		Files.copy(getPath(filename), os);
+	}
+
 	protected File getFile(String filename) {
 		return new File(property.getExternalFolder(), filename);
 	}
+	
+	private Path getPath(String filename) {
+		return FileSystems.getDefault().getPath(property.getExternalFolder(), filename);
+	}
+	
 	
 	public boolean isBinary(String ext) {
 		switch (ext) {
