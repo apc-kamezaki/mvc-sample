@@ -1,14 +1,15 @@
 package com.example.spring.beans;
 
+import org.springframework.stereotype.Component;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+@Component
 public class ExternalFolderProperty {
-	private String externalFolder = "/Users/hitoshi/data/freemarker/";
-
-	public String getExternalFolder() {
-		return externalFolder;
-	}
-
-	public void setExternalFolder(String externalFolder) {
-		this.externalFolder = externalFolder;
-	}
-
+	
+	@Getter @Setter
+	@NonNull
+	private String externalFolder;
 }

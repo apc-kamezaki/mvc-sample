@@ -31,7 +31,12 @@
 	    <beans:property name="prefix" value=""/>
 	    <beans:property name="suffix" value=".ftl"/>
 	    <beans:property name="contentType" value="text/html;charset=UTF-8" />
-	</beans:bean>	
+	</beans:bean>
+	
+	<beans:bean id="externalFolderProperty" class="com.example.spring.beans.ExternalFolderProperty">
+		<beans:property name="externalFolder" value="/Users/hitoshi/data/freemarker/" />
+	</beans:bean>
+	
 	<context:component-scan base-package="com.example.spring" />
 	
 </beans:beans>

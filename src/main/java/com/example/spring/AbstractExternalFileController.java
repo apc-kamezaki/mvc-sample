@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,10 +22,10 @@ import com.example.spring.exceptions.ExternalFileNotFoundException;
 public abstract class AbstractExternalFileController<T extends ExternalPath> {
 	private final Logger logger;
 	private static final AntPathMatcher apm = new AntPathMatcher();
-	
-	// TODO auto-wire by spring-bean
-	private ExternalFolderHandler folderHandler = new ExternalFolderHandler();
 
+	@Autowired
+	private ExternalFolderHandler folderHandler;
+	
 	public AbstractExternalFileController() {
 		super();
 		logger = LoggerFactory.getLogger(this.getClass());

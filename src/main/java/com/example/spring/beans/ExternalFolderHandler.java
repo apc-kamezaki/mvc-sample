@@ -13,17 +13,24 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Component
 public class ExternalFolderHandler {
-	public static final String LocalVariablesFileName = "variables.json";	
+	public static final String LocalVariablesFileName = "variables.json";
 	private static final Logger logger = LoggerFactory.getLogger(ExternalFolderHandler.class);
+
+	@NonNull
+	private final ExternalFolderProperty property;
 	
-	// TODO auto-wire by spring bean
-	private ExternalFolderProperty property = new ExternalFolderProperty();
 	private Gson gson = new Gson();
 	
 	public boolean isExists(String filename) {
