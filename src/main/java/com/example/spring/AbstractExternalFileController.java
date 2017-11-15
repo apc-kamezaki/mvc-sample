@@ -39,6 +39,10 @@ public abstract class AbstractExternalFileController<T extends ExternalPath> {
 		return folderHandler;
 	}
 	
+	protected String getTemplate(final String path) {
+		return "/include";
+	}
+
 	public abstract T getModel(String path);
 	public abstract String getExternalPathPrefix();
 	
@@ -51,7 +55,7 @@ public abstract class AbstractExternalFileController<T extends ExternalPath> {
 		if (!folderHandler.isExists(path)) {
 			throw new ExternalFileNotFoundException(path);
 		}
-		return new ModelAndView("/include", "value", getModel(path));
+		return new ModelAndView(getTemplate(path), "value", getModel(path));
 	}
 
 	@RequestMapping(value = "/**/{file:(?!(?:.+\\.html?)$).+$}", method = RequestMethod.GET)

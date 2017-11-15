@@ -41,6 +41,17 @@ public class ContentsController extends AbstractExternalFileController<SessionVa
 		return "/contents";
 	}
 	
+	@Override
+	protected String getTemplate(String path) {
+		String subPath = getSubPath(path);
+		File template = new File(subPath, "template.ftl");
+		if (getExternalFolderHandler().isExists(template.getPath())) {
+			return String.format("%s/template", subPath);
+		} else {
+			return super.getTemplate(path);
+		}
+	}
+
 	@RequestMapping(value = {"/", "/index.html"}, method=RequestMethod.GET)
 	public ModelAndView index(HttpServletRequest req) throws ExternalFileNotFoundException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
@@ -63,9 +74,9 @@ public class ContentsController extends AbstractExternalFileController<SessionVa
 		if (handler.isExists(template.getPath())) {
 			return new ModelAndView(String.format("%s/%s/index", getExternalPathPrefix(), sub), "value", getModel(html.getPath()));
 		} else if (handler.isExists(html.getPath())) {
-			return new ModelAndView("/include", "value", getModel(html.getPath()));
+			return new ModelAndView(getTemplate(html.getPath()), "value", getModel(html.getPath()));
 		} else if (handler.isExists(htm.getPath())) {
-			return new ModelAndView("/include", "value", getModel(htm.getPath()));			
+			return new ModelAndView(getTemplate(htm.getPath()), "value", getModel(htm.getPath()));			
 		}
 		throw new ExternalFileNotFoundException(path);
 	}
