@@ -74,10 +74,11 @@ public class ContentsController extends AbstractExternalFileController<SessionVa
 		if (handler.isExists(template.getPath())) {
 			return new ModelAndView(String.format("%s/%s/index", getExternalPathPrefix(), sub), "value", getModel(html.getPath()));
 		} else if (handler.isExists(html.getPath())) {
-			return new ModelAndView(getTemplate(html.getPath()), "value", getModel(html.getPath()));
+			return new ModelAndView("redirect:index.html");
 		} else if (handler.isExists(htm.getPath())) {
-			return new ModelAndView(getTemplate(htm.getPath()), "value", getModel(htm.getPath()));			
+			return new ModelAndView("redirect:index.htm");
 		}
+		logger().info("not supported yet " + path);
 		throw new ExternalFileNotFoundException(path);
 	}
 	
