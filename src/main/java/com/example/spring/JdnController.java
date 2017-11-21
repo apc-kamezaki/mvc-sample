@@ -27,6 +27,7 @@ public class JdnController extends AbstractContentsController<SessionValueObject
 	public SessionValueObject getModel(String path) {
 		SessionValueObjectBuilder builder = getDefaultSessionValueObjectBuilder(path);
 		return builder
+				.setMap(getExternalFolderHandler().getLocalVariables(getExternalPathPrefix()))
 				.build();
 	}
 	
@@ -35,8 +36,7 @@ public class JdnController extends AbstractContentsController<SessionValueObject
 				.setPath(path)
 				.setYear(2017)
 				.setSite("1")
-				.setGrade(6)
-				.setMap(getExternalFolderHandler().getLocalVariables(getExternalPathPrefix()));
+				.setGrade(6);
 	}
 
 	@Override
