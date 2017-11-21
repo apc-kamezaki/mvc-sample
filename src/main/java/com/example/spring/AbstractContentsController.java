@@ -19,7 +19,7 @@ public abstract class AbstractContentsController<T extends ExternalPath> extends
 	
 	protected abstract String getContentsTopDirectory(String path);
 	
-	@RequestMapping(value = {"/", "/index.html"}, method=RequestMethod.GET)
+	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ModelAndView index(HttpServletRequest req) throws ExternalFileNotFoundException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
