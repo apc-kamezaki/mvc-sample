@@ -9,7 +9,5 @@ import lombok.RequiredArgsConstructor;
 public class JdnDataBean {
 	@Getter	@NonNull
 	private final String yesr;
-	@Getter	@NonNull
-	private final String dir;
 
 }

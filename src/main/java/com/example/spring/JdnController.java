@@ -6,11 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.beans.ExternalFolderHandler;
@@ -45,7 +44,7 @@ public class JdnController extends AbstractContentsController<SessionValueObject
 	}
 	
 	@RequestMapping(value = "/index.html", method=RequestMethod.GET)
-	public ModelAndView index(HttpServletRequest req) throws ExternalFileNotFoundException {
+	public ModelAndView index() throws ExternalFileNotFoundException {
 		ExternalFolderHandler handler = getExternalFolderHandler();
 		File html = new File(getExternalPathPrefix(), "index.html");
 		logger().info("call index.html of jdn");
@@ -59,6 +58,25 @@ public class JdnController extends AbstractContentsController<SessionValueObject
 		builder.setMap(map);
 		return new ModelAndView(getTemplate(html.getPath()), "value", builder.build());
 	}
+
+	@RequestMapping(value = "/dgibk/index.html", params = { "y" }, method=RequestMethod.GET)
+	public ModelAndView dgibkIndex(
+			@RequestParam(value = "y") String yesr
+			) throws ExternalFileNotFoundException {
+		ExternalFolderHandler handler = getExternalFolderHandler();
+		File html = new File(getExternalPathPrefix(), "dgibk/index.html");
+		logger().info("call index.html of jdn dgibk");
+		if (!handler.isExists(html.getPath())) {
+			logger().error("cannot find " + html.getPath());
+			throw new ExternalFileNotFoundException(html.getPath());
+		}
+		SessionValueObjectBuilder builder = getDefaultSessionValueObjectBuilder(html.getPath());
+		Map<String, Object> map = new HashMap<>(getExternalFolderHandler().getLocalVariables(getExternalPathPrefix()));
+		map.put("yesr", yesr);
+		map.put("pageNum", pageNumMap.get(yesr));
+		builder.setMap(map);
+		return new ModelAndView(getTemplate(html.getPath()), "value", builder.build());
+	}
 	
 	private List<JdnDataBean> getDataList() {
 		return Arrays.asList(
@@ -69,6 +87,16 @@ public class JdnController extends AbstractContentsController<SessionValueObject
 	}
 	
 	private JdnDataBean makeJdnDataBean(final String yesr) {
-		return new JdnDataBean(yesr, String.format("%s/book/%s", getExternalPathPrefix(), yesr));
+		return new JdnDataBean(yesr);
 	}
+	
+	private Map<String, Integer> pageNumMap = new HashMap<String, Integer>() {
+		private static final long serialVersionUID = 1L;
+
+		{
+			put("2015", 50);
+			put("2014", 48);
+			put("2013", 46);
+		}
+	};
 }
