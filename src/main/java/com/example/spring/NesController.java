@@ -11,18 +11,13 @@ import com.example.spring.beans.SessionValueObject.SessionValueObjectBuilder;
 public class NesController extends AbstractContentsController<SessionValueObject> {
 
 	@Override
-	protected String getContentsTopDirectory(String path) {
-		return "/contents/nes";
-	}
-
-	@Override
 	public SessionValueObject getModel(String path) {
 		return new SessionValueObjectBuilder()
 				.setPath(path)
 				.setYear(2017)
 				.setSite("1")
 				.setGrade(6)
-				.setMap(getExternalFolderHandler().getLocalVariables(getContentsTopDirectory(path)))
+				.setMap(getExternalFolderHandler().getLocalVariables(getExternalPathPrefix()))
 				.build();
 	}
 

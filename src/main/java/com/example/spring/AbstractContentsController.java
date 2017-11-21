@@ -17,8 +17,6 @@ import com.example.spring.exceptions.ExternalFileNotFoundException;
 public abstract class AbstractContentsController<T extends ExternalPath> extends AbstractExternalFileController<T> {
 	protected static final AntPathMatcher apm = new AntPathMatcher();
 	
-	protected abstract String getContentsTopDirectory(String path);
-	
 	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ModelAndView index(HttpServletRequest req) throws ExternalFileNotFoundException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);

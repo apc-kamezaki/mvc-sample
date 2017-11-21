@@ -24,19 +24,19 @@ import com.example.spring.exceptions.ExternalFileNotFoundException;
 public class JdnController extends AbstractContentsController<SessionValueObject> {
 
 	@Override
-	protected String getContentsTopDirectory(String path) {
-		return "/contents/jdn";
-	}
-
-	@Override
 	public SessionValueObject getModel(String path) {
+		SessionValueObjectBuilder builder = getDefaultSessionValueObjectBuilder(path);
+		return builder
+				.build();
+	}
+	
+	private SessionValueObjectBuilder getDefaultSessionValueObjectBuilder(String path) {
 		return new SessionValueObjectBuilder()
 				.setPath(path)
 				.setYear(2017)
 				.setSite("1")
 				.setGrade(6)
-				.setMap(getExternalFolderHandler().getLocalVariables(getContentsTopDirectory(path)))
-				.build();
+				.setMap(getExternalFolderHandler().getLocalVariables(getExternalPathPrefix()));
 	}
 
 	@Override
@@ -53,19 +53,22 @@ public class JdnController extends AbstractContentsController<SessionValueObject
 			logger().error("cannot find " + html.getPath());
 			throw new ExternalFileNotFoundException(html.getPath());
 		}
-		SessionValueObject vo = getModel(html.getPath());
-		Map<String, Object> map = new HashMap<>(vo.getMap());
+		SessionValueObjectBuilder builder = getDefaultSessionValueObjectBuilder(html.getPath());
+		Map<String, Object> map = new HashMap<>(getExternalFolderHandler().getLocalVariables(getExternalPathPrefix()));
 		map.put("list",getDataList());
-		return new ModelAndView(getTemplate(html.getPath()), "value", vo);
+		builder.setMap(map);
+		return new ModelAndView(getTemplate(html.getPath()), "value", builder.build());
 	}
 	
 	private List<JdnDataBean> getDataList() {
 		return Arrays.asList(
-				new JdnDataBean("2015"),
-				new JdnDataBean("2014"),
-				new JdnDataBean("2013")
+				makeJdnDataBean("2015"),
+				makeJdnDataBean("2014"),
+				makeJdnDataBean("2013")
 				);
 	}
-
-
+	
+	private JdnDataBean makeJdnDataBean(final String yesr) {
+		return new JdnDataBean(yesr, String.format("%s/book/%s", getExternalPathPrefix(), yesr));
+	}
 }
