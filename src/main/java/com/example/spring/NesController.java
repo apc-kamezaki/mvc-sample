@@ -41,6 +41,16 @@ public class NesController extends AbstractExternalFileController<SessionValueOb
 		return "/contents/nes";
 	}
 
+	@Override
+	protected String getTemplate(String path) {
+		File template = new File(getExternalPathPrefix(), "template.ftl");
+		if (getExternalFolderHandler().isExists(template.getPath())) {
+			return String.format("%s/template", getExternalPathPrefix());
+		} else {
+			return super.getTemplate(path);
+		}
+	}
+
 	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ModelAndView top() throws ExternalFileNotFoundException {
 		ExternalFolderHandler handler = getExternalFolderHandler();
