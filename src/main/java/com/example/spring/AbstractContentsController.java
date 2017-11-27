@@ -18,7 +18,7 @@ public abstract class AbstractContentsController<T extends ExternalPath> extends
 	protected static final AntPathMatcher apm = new AntPathMatcher();
 	
 	@RequestMapping(value = "/", method=RequestMethod.GET)
-	public ModelAndView index(HttpServletRequest req) throws ExternalFileNotFoundException {
+	public ModelAndView top(HttpServletRequest req) throws ExternalFileNotFoundException {
 		String fullPath = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String bestMatchPattern = (String) req.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 		String path = new File(getExternalPathPrefix(), apm.extractPathWithinPattern(bestMatchPattern, fullPath)).getPath();
