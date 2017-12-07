@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,10 +60,26 @@ public class JdnController extends AbstractContentsController<SessionValueObject
 		return new ModelAndView(getTemplate(html.getPath()), "value", builder.build());
 	}
 
+    @RequestMapping(value = "/{device:pc|sp}/index.html", method=RequestMethod.GET)
+    public ModelAndView deviceIndex(@PathVariable("device") String device) throws ExternalFileNotFoundException {
+        ExternalFolderHandler handler = getExternalFolderHandler();
+        String devicePath = String.format("%s/%s", getExternalPathPrefix(), device);
+        File html = new File(devicePath, "index.html");
+        logger().info("call index.html of jdn/" + device);
+        if (!handler.isExists(html.getPath())) {
+            logger().error("cannot find " + html.getPath());
+            throw new ExternalFileNotFoundException(html.getPath());
+        }
+        SessionValueObjectBuilder builder = getDefaultSessionValueObjectBuilder(html.getPath());
+        Map<String, Object> map = new HashMap<>(getExternalFolderHandler().getLocalVariables(devicePath));
+        map.put("list",getDataList());
+        builder.setMap(map);
+        return new ModelAndView(getTemplate(html.getPath()), "value", builder.build());
+    }
+    
 	@RequestMapping(value = "/dgibk/index.html", params = { "y" }, method=RequestMethod.GET)
-	public ModelAndView dgibkIndex(
-			@RequestParam(value = "y") String yesr
-			) throws ExternalFileNotFoundException {
+	public ModelAndView dgibkIndex(@RequestParam(value = "y") String yesr)
+	        throws ExternalFileNotFoundException {
 		ExternalFolderHandler handler = getExternalFolderHandler();
 		File html = new File(getExternalPathPrefix(), "dgibk/index.html");
 		logger().info("call index.html of jdn dgibk");
